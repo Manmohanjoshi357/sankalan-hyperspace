@@ -2,123 +2,124 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>SANKALAN — Hyperspace</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@300;400;600&family=Cormorant+Garamond:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
-body { background:#000; overflow:hidden; width:100vw; height:100vh; }
-canvas { position:absolute; top:0; left:0; }
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html, body { width:100%; height:100%; overflow:hidden; background:#000; }
+canvas { position:absolute; top:0; left:0; width:100%; height:100%; }
+
 .ui {
   position:absolute; top:0; left:0; width:100%; height:100%;
   display:flex; flex-direction:column; align-items:center; justify-content:center;
-  pointer-events:none;
+  pointer-events:none; padding:1rem;
 }
 .reticle {
-  position: relative;
-  width: clamp(220px, 32vw, 360px);
-  height: clamp(220px, 32vw, 360px);
-  display: flex; align-items: center; justify-content: center;
-  opacity: 0;
-  animation: appear 2.5s ease 0.5s forwards;
+  position:relative;
+  width:clamp(150px, 30vw, 340px);
+  height:clamp(150px, 30vw, 340px);
+  display:flex; align-items:center; justify-content:center;
+  opacity:0; animation:appear 2.5s ease 0.5s forwards;
+  flex-shrink:0;
 }
 .reticle-ring {
-  position: absolute;
-  border-radius: 50%;
-  border: 1px solid rgba(160, 210, 255, 0.18);
+  position:absolute; border-radius:50%;
+  border:1px solid rgba(160,210,255,0.18);
 }
-.reticle-ring:nth-child(1) { width: 100%; height: 100%; }
-.reticle-ring:nth-child(2) { width: 75%; height: 75%; border-color: rgba(160,210,255,0.1); }
-.reticle-ring:nth-child(3) { width: 50%; height: 50%; border-color: rgba(160,210,255,0.08); }
-.crosshair-h, .crosshair-v {
-  position: absolute;
-  background: rgba(150,200,255,0.12);
-}
-.crosshair-h { width: 85%; height: 1px; }
-.crosshair-v { width: 1px; height: 85%; }
-.tick {
-  position: absolute;
-  background: rgba(150,200,255,0.3);
-}
-.tick-t { width: 1px; height: 12px; top: 0; left: 50%; }
-.tick-b { width: 1px; height: 12px; bottom: 0; left: 50%; }
-.tick-l { height: 1px; width: 12px; top: 50%; left: 0; }
-.tick-r { height: 1px; width: 12px; top: 50%; right: 0; }
+.reticle-ring:nth-child(1){width:100%;height:100%;}
+.reticle-ring:nth-child(2){width:75%;height:75%;border-color:rgba(160,210,255,0.1);}
+.reticle-ring:nth-child(3){width:50%;height:50%;border-color:rgba(160,210,255,0.07);}
+.crosshair-h,.crosshair-v { position:absolute; background:rgba(150,200,255,0.1); }
+.crosshair-h{width:85%;height:1px;} .crosshair-v{width:1px;height:85%;}
+.tick{position:absolute;background:rgba(150,200,255,0.28);}
+.tick-t{width:1px;height:10px;top:0;left:50%;}
+.tick-b{width:1px;height:10px;bottom:0;left:50%;}
+.tick-l{height:1px;width:10px;top:50%;left:0;}
+.tick-r{height:1px;width:10px;top:50%;right:0;}
 .center-dot {
-  width: 5px; height: 5px; border-radius: 50%;
-  background: rgba(180,220,255,0.7);
-  box-shadow: 0 0 15px rgba(150,200,255,0.9), 0 0 30px rgba(120,180,255,0.4);
-  z-index: 1;
+  width:5px;height:5px;border-radius:50%;
+  background:rgba(180,220,255,0.7);
+  box-shadow:0 0 15px rgba(150,200,255,0.9),0 0 30px rgba(120,180,255,0.4);
+  z-index:1;
 }
 .main-title {
-  font-family: 'Cinzel', serif;
-  font-size: clamp(3rem, 9vw, 8.5rem);
-  font-weight: 300;
-  letter-spacing: 0.3em;
-  color: #fff;
-  text-transform: uppercase;
-  text-align: center;
-  text-shadow:
-    0 0 35px rgba(120,185,255,0.9),
-    0 0 90px rgba(100,160,255,0.4),
-    0 0 180px rgba(80,140,255,0.15);
-  margin-top: 2rem;
-  opacity: 0;
-  animation: appear 2s ease 1s forwards;
+  font-family:'Cinzel',serif;
+  font-size:clamp(2.5rem, 13vw, 8.5rem);
+  font-weight:300;
+  letter-spacing:clamp(0.1em, 2vw, 0.3em);
+  color:#fff;
+  text-transform:uppercase;
+  text-align:center;
+  text-shadow: 0 0 35px rgba(120,185,255,0.9), 0 0 90px rgba(100,160,255,0.4), 0 0 180px rgba(80,140,255,0.15);
+  margin-top:clamp(1rem, 3vw, 2rem);
+  opacity:0; animation:appear 2s ease 1s forwards;
+  line-height:1;
 }
 .tagline {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
-  font-size: clamp(0.85rem, 1.8vw, 1.4rem);
-  font-weight: 300;
-  color: rgba(170,210,255,0.55);
-  letter-spacing: 0.18em;
-  margin-top: 0.8rem;
-  text-align: center;
-  opacity: 0;
-  animation: appear 2s ease 1.4s forwards;
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;
+  font-size:clamp(0.7rem, 2.8vw, 1.4rem);
+  font-weight:300;
+  color:rgba(170,210,255,0.55);
+  letter-spacing:clamp(0.06em, 1vw, 0.18em);
+  margin-top:clamp(0.4rem, 1.5vw, 0.8rem);
+  text-align:center;
+  opacity:0; animation:appear 2s ease 1.4s forwards;
+  padding:0 0.5rem;
 }
-.hud-left {
-  position: absolute; left: clamp(1.5rem, 3vw, 3rem); top: 50%; transform: translateY(-50%);
-  display: flex; flex-direction: column; gap: 1.4rem;
-  opacity: 0; animation: appear 2s ease 1.8s forwards;
+
+/* Side HUDs — stacked under title on mobile, float on desktop */
+.hud-left,.hud-right {
+  position:absolute; top:50%; transform:translateY(-50%);
+  display:flex; flex-direction:column; gap:clamp(0.8rem,2vw,1.4rem);
+  opacity:0; animation:appear 2s ease 1.8s forwards;
 }
-.hud-right {
-  position: absolute; right: clamp(1.5rem, 3vw, 3rem); top: 50%; transform: translateY(-50%);
-  display: flex; flex-direction: column; gap: 1.4rem; align-items: flex-end;
-  opacity: 0; animation: appear 2s ease 1.8s forwards;
+.hud-left { left:clamp(1rem,3vw,3rem); }
+.hud-right { right:clamp(1rem,3vw,3rem); align-items:flex-end; }
+@media (max-width:600px) and (orientation:portrait) {
+  .hud-left,.hud-right { display:none; }
 }
 .hud-item {
-  font-family: 'Cinzel', serif;
-  font-size: clamp(0.5rem, 0.75vw, 0.62rem);
-  letter-spacing: 0.25em;
-  color: rgba(130,180,255,0.28);
-  text-transform: uppercase;
+  font-family:'Cinzel',serif;
+  font-size:clamp(0.42rem,1.1vw,0.62rem);
+  letter-spacing:0.22em; color:rgba(130,180,255,0.28);
+  text-transform:uppercase;
 }
-.hud-item span { display:block; color: rgba(190,220,255,0.5); margin-top: 3px; font-size: 1.1em; }
+.hud-item span{display:block;color:rgba(190,220,255,0.5);margin-top:3px;}
+
 .scan-line {
-  position: absolute; width: 100%; height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(100,180,255,0.08), transparent);
-  animation: scan 6s linear infinite;
+  position:absolute; width:100%; height:1px;
+  background:linear-gradient(90deg,transparent,rgba(100,180,255,0.07),transparent);
+  animation:scan 7s linear infinite;
+  pointer-events:none;
 }
+
 .corner-tl,.corner-tr,.corner-bl,.corner-br {
-  position:absolute; width:22px; height:22px;
+  position:absolute;
+  width:clamp(12px,2.5vw,22px); height:clamp(12px,2.5vw,22px);
   opacity:0; animation:appear 2s ease 2.2s forwards;
 }
-.corner-tl{top:1.8rem;left:1.8rem;border-top:1px solid rgba(150,200,255,0.2);border-left:1px solid rgba(150,200,255,0.2);}
-.corner-tr{top:1.8rem;right:1.8rem;border-top:1px solid rgba(150,200,255,0.2);border-right:1px solid rgba(150,200,255,0.2);}
-.corner-bl{bottom:1.8rem;left:1.8rem;border-bottom:1px solid rgba(150,200,255,0.2);border-left:1px solid rgba(150,200,255,0.2);}
-.corner-br{bottom:1.8rem;right:1.8rem;border-bottom:1px solid rgba(150,200,255,0.2);border-right:1px solid rgba(150,200,255,0.2);}
+.corner-tl{top:clamp(0.8rem,2vw,1.8rem);left:clamp(0.8rem,2vw,1.8rem);border-top:1px solid rgba(150,200,255,0.2);border-left:1px solid rgba(150,200,255,0.2);}
+.corner-tr{top:clamp(0.8rem,2vw,1.8rem);right:clamp(0.8rem,2vw,1.8rem);border-top:1px solid rgba(150,200,255,0.2);border-right:1px solid rgba(150,200,255,0.2);}
+.corner-bl{bottom:clamp(0.8rem,2vw,1.8rem);left:clamp(0.8rem,2vw,1.8rem);border-bottom:1px solid rgba(150,200,255,0.2);border-left:1px solid rgba(150,200,255,0.2);}
+.corner-br{bottom:clamp(0.8rem,2vw,1.8rem);right:clamp(0.8rem,2vw,1.8rem);border-bottom:1px solid rgba(150,200,255,0.2);border-right:1px solid rgba(150,200,255,0.2);}
+
 .bottom-bar {
-  position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
-  font-family: 'Cinzel', serif;
-  font-size: 0.52rem; letter-spacing: 0.35em;
-  color: rgba(120,170,255,0.22);
-  text-transform: uppercase; white-space: nowrap;
-  opacity: 0; animation: appear 2s ease 2.4s forwards;
+  position:absolute; bottom:clamp(0.8rem,2vw,2rem); left:50%; transform:translateX(-50%);
+  font-family:'Cinzel',serif;
+  font-size:clamp(0.38rem,1.1vw,0.52rem);
+  letter-spacing:clamp(0.1em,0.8vw,0.35em);
+  color:rgba(120,170,255,0.2);
+  text-transform:uppercase; white-space:nowrap;
+  opacity:0; animation:appear 2s ease 2.4s forwards;
 }
-@keyframes appear { from{opacity:0;}to{opacity:1;} }
-@keyframes scan { from{top:-1px;}to{top:100%;} }
+@media(max-width:480px){
+  .bottom-bar { font-size:0.38rem; letter-spacing:0.12em; white-space:normal; text-align:center; width:90%; }
+}
+
+@keyframes appear{from{opacity:0;}to{opacity:1;}}
+@keyframes scan{from{top:-1px;}to{top:100%;}}
 </style>
 </head>
 <body>
@@ -131,10 +132,8 @@ canvas { position:absolute; top:0; left:0; }
     <div class="reticle-ring"></div>
     <div class="crosshair-h"></div>
     <div class="crosshair-v"></div>
-    <div class="tick tick-t"></div>
-    <div class="tick tick-b"></div>
-    <div class="tick tick-l"></div>
-    <div class="tick tick-r"></div>
+    <div class="tick tick-t"></div><div class="tick tick-b"></div>
+    <div class="tick tick-l"></div><div class="tick tick-r"></div>
     <div class="center-dot"></div>
   </div>
   <div class="main-title">Sankalan</div>
@@ -161,21 +160,22 @@ let W,H,cx,cy,t=0,lines=[];
 function resize(){
   W=canvas.width=window.innerWidth;
   H=canvas.height=window.innerHeight;
-  cx=W/2; cy=H/2; initLines();
+  cx=W/2;cy=H/2;initLines();
 }
 
 function initLines(){
-  lines=Array.from({length:400},()=>spawn());
+  const count=W<480?200:W<768?280:400;
+  lines=Array.from({length:count},()=>spawn());
 }
 
 function spawn(){
-  const angle=Math.random()*Math.PI*2;
-  const hue=195+Math.random()*55-25;
-  return {
-    angle, dist:Math.random()*Math.max(W,H)*0.04,
+  return{
+    angle:Math.random()*Math.PI*2,
+    dist:Math.random()*Math.max(W,H)*0.04,
     speed:Math.random()*5.5+1.2,
-    length:0, maxLen:Math.random()*160+55,
-    hue, sat:60+Math.random()*40,
+    length:0,maxLen:Math.random()*160+55,
+    hue:195+Math.random()*55-25,
+    sat:60+Math.random()*40,
     alpha:Math.random()*0.55+0.2,
     width:Math.random()*1.6+0.25
   };
@@ -184,35 +184,31 @@ function spawn(){
 function frame(){
   ctx.fillStyle='rgba(0,0,5,0.16)';
   ctx.fillRect(0,0,W,H);
-
   lines.forEach((l,i)=>{
     l.dist+=l.speed*(1+l.dist*0.0028);
     l.length=Math.min(l.length+l.speed*2.1,l.maxLen);
-    const x1=cx+Math.cos(l.angle)*l.dist, y1=cy+Math.sin(l.angle)*l.dist;
-    const x2=cx+Math.cos(l.angle)*(l.dist-l.length), y2=cy+Math.sin(l.angle)*(l.dist-l.length);
+    const x1=cx+Math.cos(l.angle)*l.dist,y1=cy+Math.sin(l.angle)*l.dist;
+    const x2=cx+Math.cos(l.angle)*(l.dist-l.length),y2=cy+Math.sin(l.angle)*(l.dist-l.length);
     const g=ctx.createLinearGradient(x2,y2,x1,y1);
     g.addColorStop(0,`hsla(${l.hue},${l.sat}%,70%,0)`);
     g.addColorStop(0.5,`hsla(${l.hue},${l.sat}%,82%,${l.alpha*0.35})`);
     g.addColorStop(1,`hsla(${l.hue},${l.sat}%,96%,${l.alpha})`);
-    ctx.beginPath(); ctx.moveTo(x2,y2); ctx.lineTo(x1,y1);
+    ctx.beginPath();ctx.moveTo(x2,y2);ctx.lineTo(x1,y1);
     ctx.strokeStyle=g;
     ctx.lineWidth=l.width*(1+l.dist/(Math.max(W,H)*0.28));
     ctx.stroke();
     if(l.dist>Math.max(W,H)*0.88) lines[i]=spawn();
   });
-
-  // centre glow
   const glow=ctx.createRadialGradient(cx,cy,0,cx,cy,Math.max(W,H)*0.14);
   glow.addColorStop(0,'rgba(0,8,35,0.45)');
   glow.addColorStop(0.6,'rgba(0,4,18,0.22)');
   glow.addColorStop(1,'rgba(0,0,0,0)');
-  ctx.fillStyle=glow; ctx.fillRect(0,0,W,H);
-
-  t++; requestAnimationFrame(frame);
+  ctx.fillStyle=glow;ctx.fillRect(0,0,W,H);
+  t++;requestAnimationFrame(frame);
 }
-
 window.addEventListener('resize',resize);
-resize(); frame();
+window.addEventListener('orientationchange',()=>setTimeout(resize,200));
+resize();frame();
 </script>
 </body>
 </html>
